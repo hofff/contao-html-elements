@@ -14,6 +14,7 @@ namespace SemanticHTML5\Elements;
 
 use Contao\BackendTemplate;
 use Contao\ContentElement;
+use Contao\StringUtil;
 use Contao\System;
 use SemanticHTML5\Frontend\Helper;
 
@@ -43,7 +44,7 @@ class Start extends ContentElement
 
         if ($this->sh5_additional) {
             /** @var array $additionalAttributes */
-            $additionalAttributes = deserialize($this->sh5_additional, true);
+            $additionalAttributes = StringUtil::deserialize($this->sh5_additional, true);
             $attributes = $helper->convertAttributesToString($additionalAttributes, 'tl_content'); 
 
         }
