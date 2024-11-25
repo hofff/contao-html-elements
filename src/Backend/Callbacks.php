@@ -12,6 +12,12 @@
 
 namespace SemanticHTML5\Backend;
 
+use Contao\BackendTemplate;
+use Contao\Database;
+use Contao\DataContainer;
+use Contao\Input;
+use Contao\System;
+
 /**
  * Generall class to handle all backend callbacks
  */
@@ -55,9 +61,9 @@ class Callbacks
 
     /**
      * Adds or updates the corresponding star or end tag
-     * @param \DataContainer $dc
+     * @param DataContainer $dc
      */
-    public static function onsubmitCallback(\DataContainer $dc)
+    public static function onsubmitCallback(DataContainer $dc)
     {   
         //if this is not a html5 element, do nothing
         if (in_array($dc->activeRecord->type, array('sHtml5Start', 'sHtml5End'))) {
@@ -79,10 +85,10 @@ class Callbacks
     /**
      * Deletes the corresponding html5 tag
      * 
-     * @param \DataContainer $dc
+     * @param DataContainer $dc
      * @param int $id
      */
-    public static function ondeleteCallback(\DataContainer $dc, $id)
+    public static function ondeleteCallback(DataContainer $dc, $id)
     {
         //if this is not a html5 element, do nothing
         if (in_array($dc->activeRecord->type, array('sHtml5Start', 'sHtml5End'))) {
@@ -92,25 +98,25 @@ class Callbacks
     }
 
     /**
-     * This methods corrects the hml5-elements after using the copy function of 
+     * This method corrects the hml5-elements after using the copy function of
      * the tl_page table
      * 
      * @param type $id
-     * @param \DataContainer $dc
+     * @param DataContainer $dc
      */
-    public static function oncopyPageCallback($id, \DataContainer $dc)
+    public static function oncopyPageCallback($id, DataContainer $dc)
     {
 
         $pages = array($id);
 
         //fetch the child pages, if needed
-        if (\Input::get('childs')) {
-            $pages = array_merge($pages, \Database::getInstance()->getChildRecords($id, 'tl_page'));
+        if (Input::get('childs')) {
+            $pages = array_merge($pages, Database::getInstance()->getChildRecords($id, 'tl_page'));
             
         }
 
         //fetch all html5 start elemnts and update them the end elements will be corrected automatically
-        $elements = \Database::getInstance()
+        $elements = Database::getInstance()
                 ->prepare(
                         sprintf(
                                 'SELECT * FROM tl_content '
@@ -137,13 +143,13 @@ class Callbacks
      * the tl_article table
      * 
      * @param type $id
-     * @param \DataContainer $dc
+     * @param DataContainer $dc
      */
-    public static function oncopyArticleCallback($id, \DataContainer $dc)
+    public static function oncopyArticleCallback($id, DataContainer $dc)
     {
 
         //fetch all html5 start elemnts and update them the end elements will be corrected automatically
-        $elements = \Database::getInstance()
+        $elements = Database::getInstance()
                 ->prepare('SELECT * FROM tl_content WHERE type = "sHtml5Start" AND pid = ?')
                 ->execute($id);
 
@@ -164,14 +170,14 @@ class Callbacks
      * the tl_content table
      * 
      * @param int $id The id of the new element
-     * @param \DataContainer $dc The datad container
+     * @param DataContainer $dc The datad container
      */
-    public static function oncopyContentCallback($id, \DataContainer $dc)
+    public static function oncopyContentCallback($id, DataContainer $dc)
     {
  
         //only handle copyAll cases. If only a single element was copied the 
         //onsubmit callback will handle the correction
-        if (\Input::get('act') == 'copyAll') {
+        if (Input::get('act') == 'copyAll') {
 
             $util = new TagUtils($dc->table);
             $newElement = $util->getTag($id);
@@ -224,9 +230,11 @@ class Callbacks
      */
     public static function addColorizeJs($objRow, $strBuffer, $objElement)
     {
-        // if the element is no type of semantic html5 or the element ist not 
+        $isBackend = System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest();
+
+        // if the element is no type of semantic html5 or the element ist not
         // renderen in the backend, do nothing
-        if (TL_MODE == 'BE' && ($objRow->type == 'sHtml5Start' || $objRow->type == 'sHtml5End')) {
+        if ($isBackend && ($objRow->type == 'sHtml5Start' || $objRow->type == 'sHtml5End')) {
             //get the color of the parent start-tag or rotate the color
             if ($objRow->type == 'sHtml5End') {
                 $color = self::$elementColors[$objRow->sh5_pid];
@@ -235,7 +243,7 @@ class Callbacks
                 self::$elementColors[$objRow->id] = $color;
             }
 
-            $template = new \BackendTemplate('be_semantic_html5_colorizejs');
+            $template = new BackendTemplate('be_semantic_html5_colorizejs');
             $template->id = $objRow->id;
             $template->color = $color;
 
@@ -248,10 +256,10 @@ class Callbacks
     /**
      * Returns all valid html5 tag for the given datacontainer
      * 
-     * @param \DataContainer $dc
+     * @param DataContainer $dc
      * @return array The array with the valid html5 tags
      */
-    public function getHtml5Tags(\DataContainer $dc) {
+    public function getHtml5Tags(DataContainer $dc) {
 
         return $GLOBALS['TL_HTML5']['tags'][$dc->table];
     }

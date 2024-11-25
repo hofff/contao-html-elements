@@ -12,6 +12,9 @@
 
 namespace SemanticHTML5\Elements;
 
+use Contao\BackendTemplate;
+use Contao\ContentElement;
+use Contao\System;
 use SemanticHTML5\Frontend\Helper;
 
 /**
@@ -20,7 +23,7 @@ use SemanticHTML5\Frontend\Helper;
  * @property string $sh5_additional 
  * @property string $sh5_type
  */
-class Start extends \ContentElement
+class Start extends ContentElement
 {
 
     /**
@@ -48,8 +51,8 @@ class Start extends \ContentElement
         $this->Template->sh5_additional = $attributes;
 
         //render BE-Template
-        if (TL_MODE == 'BE') {
-            $this->Template = new \BackendTemplate('be_wildcard');
+        if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest()) {
+            $this->Template = new BackendTemplate('be_wildcard');
             $this->Template->wildcard = sprintf("&lt;%s%s%s%s&gt;",
                     $this->sh5_type,
                     ($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '',

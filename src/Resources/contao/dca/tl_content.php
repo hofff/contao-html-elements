@@ -13,15 +13,18 @@
 /**
  * Palettes
  */
+
+use SemanticHTML5\Backend\Callbacks;
+
 $GLOBALS['TL_DCA']['tl_content']['palettes']['sHtml5Start'] = '{type_legend},type,headline;{html5_legend},sh5_type,sh5_additional;{protected_legend:hide},protected;{expert_legend:hide},guests,invisible,cssID,space';
 
 
 /**
  * Callbacks
  */
-$GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = array('SemanticHTML5\Backend\Callbacks', 'onsubmitCallback');
-$GLOBALS['TL_DCA']['tl_content']['config']['ondelete_callback'][] = array('SemanticHTML5\Backend\Callbacks', 'ondeleteCallback');
-$GLOBALS['TL_DCA']['tl_content']['config']['oncopy_callback'][] = array('SemanticHTML5\Backend\Callbacks', 'oncopyContentCallback');
+$GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'][] = [Callbacks::class, 'onsubmitCallback'];
+$GLOBALS['TL_DCA']['tl_content']['config']['ondelete_callback'][] = [Callbacks::class, 'ondeleteCallback'];
+$GLOBALS['TL_DCA']['tl_content']['config']['oncopy_callback'][] = [Callbacks::class, 'oncopyContentCallback'];
 
 /**
  * Fields

@@ -10,7 +10,10 @@
  * @license    LGPL-3.0+
  */
 
+use SemanticHTML5\Backend\Callbacks;
+
+
 /**
  * Callbacks
  */
-$GLOBALS['TL_DCA']['tl_article']['config']['oncopy_callback'][] = array('SemanticHTML5\Backend\Callbacks', 'oncopyArticleCallback');
+$GLOBALS['TL_DCA']['tl_article']['config']['oncopy_callback'][] = [allbacks::class, 'oncopyArticleCallback'];
