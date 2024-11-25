@@ -45,7 +45,7 @@
     "menatwork/semantic_html5": "*"
   },
   "extra": {
-    "contao-manager-plugin": "SemanticHTML5\\HofffContaoHtmlElements\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "SemanticHTML5\\ContaoManager\\Plugin"
   },
   "config": {
     "allow-plugins": {
