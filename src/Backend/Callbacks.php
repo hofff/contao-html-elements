@@ -230,7 +230,8 @@ class Callbacks
      */
     public static function addColorizeJs($objRow, $strBuffer, $objElement)
     {
-        $isBackend = System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest();
+        $request   = System::getContainer()->get('request_stack')->getCurrentRequest();
+        $isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
         // if the element is no type of semantic html5 or the element ist not
         // renderen in the backend, do nothing

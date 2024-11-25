@@ -30,8 +30,10 @@ class End extends ContentElement
      */
     protected function compile()
     {
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
         //render BE-Template
-        if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest()) {
+        if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
             $this->Template = new BackendTemplate('be_wildcard');
             $this->Template->wildcard = "&lt;/" . $this->sh5_type . "&gt;";
 

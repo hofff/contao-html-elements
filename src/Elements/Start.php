@@ -51,7 +51,9 @@ class Start extends ContentElement
         $this->Template->sh5_additional = $attributes;
 
         //render BE-Template
-        if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest()) {
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+        if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
             $this->Template = new BackendTemplate('be_wildcard');
             $this->Template->wildcard = sprintf("&lt;%s%s%s%s&gt;",
                     $this->sh5_type,
