@@ -16,4 +16,4 @@ use SemanticHTML5\Backend\Callbacks;
 /**
  * Callbacks
  */
-$GLOBALS['TL_DCA']['tl_article']['config']['oncopy_callback'][] = [allbacks::class, 'oncopyArticleCallback'];
+$GLOBALS['TL_DCA']['tl_article']['config']['oncopy_callback'][] = [Callbacks::class, 'oncopyArticleCallback'];
